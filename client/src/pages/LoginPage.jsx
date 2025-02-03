@@ -3,16 +3,16 @@ import Header from '/src/components/Header.jsx'
 import Footer from '/src/components/Footer.jsx'
 
 
-import '/src/styles/Examplepage.css'
+import '/src/styles/LoginPage.css'
 
-export default function Examplepage() {
+export default function LoginPage() {
   return (
     <>
     <Header/>
-        <div className="examplePage">
+        <div className="LoginPage">
 
 
-            <h1>Example</h1>
+            <h1>Login</h1>
 
         </div>
     

@@ -8,7 +8,8 @@ import {
 } from "react-router-dom";
 
 import Homepage from "/src/pages/Homepage.jsx"
-import Examplepage from "/src/pages/Examplepage.jsx"
+import LoginPage from "/src/pages/LoginPage.jsx"
+import AdminPage from "/src/pages/AdminPage.jsx"
 
 
 
@@ -23,10 +24,14 @@ const mainRouter = createBrowserRouter([
   },
 
   {
-    path: "example",
-    element: <Examplepage/>
-  }
+    path: "Login",
+    element: <LoginPage/>
+  },
 
+  {
+    path: "Admin",
+    element: <AdminPage/>
+  }
 
 
 
