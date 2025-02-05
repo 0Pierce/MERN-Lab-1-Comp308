@@ -10,7 +10,7 @@ import {
 import Homepage from "/src/pages/Homepage.jsx"
 import LoginPage from "/src/pages/LoginPage.jsx"
 import AdminPage from "/src/pages/AdminPage.jsx"
-
+import RegisterPage from "/src/pages/RegisterPage.jsx"
 
 
 
@@ -29,11 +29,14 @@ const mainRouter = createBrowserRouter([
   },
 
   {
+    path: "Register",
+    element: <RegisterPage/>
+  },
+
+  {
     path: "Admin",
     element: <AdminPage/>
   }
-
-
 
 ])
 
