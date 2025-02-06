@@ -60,6 +60,7 @@ export default function Header() {
           <>
             <li className="welcomeTxt">Welcome {username}</li>
             {userType === "Admin" && <li><Link to="/Admin">Admin</Link></li>}
+            {userType === "Student" && <li><Link to="/Student">Student</Link></li>}
             <li><button onClick={handleLogout}>Logout</button></li>
           </>
         )}

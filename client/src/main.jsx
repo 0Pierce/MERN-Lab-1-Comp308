@@ -11,6 +11,7 @@ import Homepage from "/src/pages/Homepage.jsx"
 import LoginPage from "/src/pages/LoginPage.jsx"
 import AdminPage from "/src/pages/AdminPage.jsx"
 import RegisterPage from "/src/pages/RegisterPage.jsx"
+import StudentPage from "/src/pages/StudentPage.jsx"
 
 
 
@@ -36,6 +37,10 @@ const mainRouter = createBrowserRouter([
   {
     path: "Admin",
     element: <AdminPage/>
+  },
+  {
+    path: "Student",
+    element: <StudentPage/>
   }
 
 ])

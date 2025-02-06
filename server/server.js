@@ -1,8 +1,10 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const mongoose = require("./config/mongoDB"); // Import DB connection
-const authRoutes = require("./routes/authRoutes"); // Import routes
+const mongoose = require("./config/mongoDB"); 
+const authRoutes = require("./routes/authRoutes"); 
+const studentRoutes = require("./routes/studentRoutes");
+const courseRoutes = require("./routes/courseRoutes"); 
 
 const app = express();
 
@@ -19,6 +21,8 @@ app.use(cors(corsOptions));
 
 // Routes
 app.use("/auth", authRoutes);
+app.use("/student", studentRoutes);
+app.use("/student", courseRoutes); 
 
 const PORT = 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

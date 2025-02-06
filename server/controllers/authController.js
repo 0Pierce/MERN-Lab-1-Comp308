@@ -2,10 +2,15 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+const generateStudentNumber = () => {
+  return "S" + Math.floor(100000 + Math.random() * 900000);
+};
+
 // Register a new user
 exports.register = async (req, res) => {
   try {
-    const { username, email, password, userType } = req.body;
+    const { username, email, password, userType, firstName, lastName, address, city, phoneNumber, program } = req.body;
+
     if (!username || !email || !password || !userType) {
       return res.status(400).json({ error: "All fields are required" });
     }
@@ -16,7 +21,28 @@ exports.register = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await User.create({ username, email, password: hashedPassword, userType });
+
+    // Create the user object
+    const newUserData = {
+      username,
+      email,
+      password: hashedPassword,
+      userType,
+    };
+
+    // If the user is a Student, add student-specific fields
+    if (userType === "Student") {
+      newUserData.studentNumber = generateStudentNumber();
+      newUserData.firstName = firstName;
+      newUserData.lastName = lastName;
+      newUserData.address = address;
+      newUserData.city = city;
+      newUserData.phoneNumber = phoneNumber;
+      newUserData.program = program;
+    }
+
+    // Save user to DB
+    const newUser = await User.create(newUserData);
 
     res.status(201).json({ message: "User registered successfully. Please log in to continue." });
   } catch (error) {
