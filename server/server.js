@@ -22,7 +22,7 @@ app.use(cors(corsOptions));
 // Routes
 app.use("/auth", authRoutes);
 app.use("/student", studentRoutes);
-app.use("/student", courseRoutes); 
+app.use("/course", courseRoutes); 
 
 const PORT = 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

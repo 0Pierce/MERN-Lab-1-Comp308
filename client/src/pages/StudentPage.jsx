@@ -7,38 +7,54 @@ export default function StudentPage() {
     const [student, setStudent] = useState({});
     const [formData, setFormData] = useState({});
     const [courses, setCourses] = useState([]);
-    const [newCourse, setNewCourse] = useState({ courseCode: '', courseName: '', section: '' });
-    const [updateCourseData, setUpdateCourseData] = useState({ courseId: '', section: '' });
+    const [newCourse, setNewCourse] = useState({ courseCode: '', courseName: '', section: '', semester: '' });
+    const [updateCourseData, setUpdateCourseData] = useState({ courseCode: '', section: '' });
 
     useEffect(() => {
-        // Fetch Student Profile
+        fetchStudentProfile();
+        fetchCourses();
+    }, []);
+
+    // Fetch Student Profile
+    const fetchStudentProfile = () => {
         fetch('http://localhost:5000/student/profile', {
             method: 'GET',
             credentials: 'include',
         })
-        .then(async (res) => {
-            if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-            return res.json();
-        })
+        .then(res => res.json())
         .then((data) => {
-            console.log("Fetched student data:", data); // Debugging
+            console.log("Fetched student data:", data);
             setStudent(data);
             setFormData(data);
         })
-        .catch((error) => {
-            console.error('Error fetching student profile:', error);
-        });
-    
-        // Fetch Student's Courses
-        fetchCourses();
-    }, []);
+        .catch((error) => console.error('Error fetching student profile:', error));
+    };
 
-    // Profile handlers
+    // Fetch Courses from CoursesDB
+    const fetchCourses = () => {
+        fetch('http://localhost:5000/course/courses', {
+            method: 'GET',
+            credentials: 'include',
+        })
+        .then(res => res.json())
+        .then((data) => {
+            console.log("Fetched full course data:", data);
+            if (Array.isArray(data) && data.length > 0) {
+                setCourses(data);
+            } else {
+                console.error("Course data is missing or malformed:", data);
+                setCourses([]);
+            }
+        })
+        .catch((error) => console.error('Error fetching courses:', error));
+    };
+
+    // Profile Handlers
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleUpdate = async () => {
+    const handleUpdateProfile = async () => {
         const response = await fetch('http://localhost:5000/student/profile', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
@@ -55,9 +71,14 @@ export default function StudentPage() {
         }
     };
 
-    // Course handlers
+    // Course Handlers
     const handleAddCourse = async () => {
-        const response = await fetch('http://localhost:5000/student/add-course', {
+        if (courses.some(course => course.courseCode === newCourse.courseCode)) {
+            alert('You have already added this course!');
+            return;
+        }
+
+        const response = await fetch('http://localhost:5000/course/add-course', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
@@ -66,7 +87,7 @@ export default function StudentPage() {
 
         if (response.ok) {
             alert('Course added successfully!');
-            setNewCourse({ courseCode: '', courseName: '', section: '' });
+            setNewCourse({ courseCode: '', courseName: '', section: '', semester: '' });
             fetchCourses();
         } else {
             alert('Failed to add course');
@@ -74,7 +95,7 @@ export default function StudentPage() {
     };
 
     const handleUpdateCourse = async () => {
-        const response = await fetch('http://localhost:5000/student/update-course', {
+        const response = await fetch('http://localhost:5000/course/update-course', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
@@ -83,19 +104,19 @@ export default function StudentPage() {
 
         if (response.ok) {
             alert('Course updated successfully!');
-            setUpdateCourseData({ courseId: '', section: '' });
+            setUpdateCourseData({ courseCode: '', section: '' });
             fetchCourses();
         } else {
             alert('Failed to update course');
         }
     };
 
-    const handleDropCourse = async (courseId) => {
-        const response = await fetch('http://localhost:5000/student/drop-course', {
+    const handleDropCourse = async (courseCode) => {
+        const response = await fetch('http://localhost:5000/course/drop-course', {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
-            body: JSON.stringify({ courseId }),
+            body: JSON.stringify({ courseCode }),
         });
 
         if (response.ok) {
@@ -104,26 +125,6 @@ export default function StudentPage() {
         } else {
             alert('Failed to drop course');
         }
-    };
-
-    const fetchCourses = () => {
-        fetch('http://localhost:5000/student/courses', {
-            method: 'GET',
-            credentials: 'include',
-        })
-        .then((res) => res.json())
-        .then((data) => {
-            if (Array.isArray(data)) {
-                setCourses(data);
-            } else {
-                console.error("Unexpected response format for courses:", data);
-                setCourses([]); // Ensure it's always an array
-            }
-        })
-        .catch((error) => {
-            console.error('Error fetching courses:', error);
-            setCourses([]); // Ensure courses is always an array
-        });
     };
 
     return (
@@ -164,18 +165,9 @@ export default function StudentPage() {
                         <input name="favoriteProfessor" value={formData?.favoriteProfessor || ''} onChange={handleChange} />
 
                         <label>Grade Average:</label>
-                        <input
-                            name="gradeAverage"
-                            type="number"
-                            min="0"
-                            max="100"
-                            value={formData?.gradeAverage || ''}
-                            onChange={handleChange}
-                        />
+                        <input name="gradeAverage" type="number" min="0" max="100" value={formData?.gradeAverage || ''} onChange={handleChange} />
 
-                        <button type="button" onClick={handleUpdate}>
-                            Save
-                        </button>
+                        <button type="button" onClick={handleUpdateProfile}>Save</button>
                     </form>
                 </div>
 
@@ -185,26 +177,30 @@ export default function StudentPage() {
                     <input placeholder="Course Code" value={newCourse.courseCode} onChange={(e) => setNewCourse({ ...newCourse, courseCode: e.target.value })} />
                     <input placeholder="Course Name" value={newCourse.courseName} onChange={(e) => setNewCourse({ ...newCourse, courseName: e.target.value })} />
                     <input placeholder="Section" value={newCourse.section} onChange={(e) => setNewCourse({ ...newCourse, section: e.target.value })} />
+                    <input placeholder="Semester" value={newCourse.semester} onChange={(e) => setNewCourse({ ...newCourse, semester: e.target.value })} />
                     <button onClick={handleAddCourse}>Add Course</button>
 
                     <h4>Update Course Section</h4>
-                    <input placeholder="Course ID" value={updateCourseData.courseId} onChange={(e) => setUpdateCourseData({ ...updateCourseData, courseId: e.target.value })} />
+                    <input placeholder="Course Code" value={updateCourseData.courseCode} onChange={(e) => setUpdateCourseData({ ...updateCourseData, courseCode: e.target.value })} />
                     <input placeholder="New Section" value={updateCourseData.section} onChange={(e) => setUpdateCourseData({ ...updateCourseData, section: e.target.value })} />
                     <button onClick={handleUpdateCourse}>Update Course</button>
 
                     <h4>Courses Taken</h4>
-                    <ul>
-                        {Array.isArray(courses) && courses.length > 0 ? (
-                            courses.map((course) => (
-                                <li key={course._id}>
-                                    {course.courseCode} - {course.courseName} - Section: {course.section}
-                                    <button onClick={() => handleDropCourse(course._id)}>Drop</button>
-                                </li>
-                            ))
-                        ) : (
-                            <li>No courses found</li>
-                        )}
-                    </ul>
+                    
+<ul>
+    {courses.length > 0 ? (
+        courses.map((course, index) => (
+            <li key={course.courseCode || index}>
+                {course.courseCode && course.courseName
+                    ? `${course.courseCode} - ${course.courseName} - Section: ${course.section}`
+                    : "Invalid Course Data"}
+                <button onClick={() => handleDropCourse(course.courseCode)}>Drop</button>
+            </li>
+        ))
+    ) : (
+        <li>No courses found</li>
+    )}
+</ul>
                 </div>
             </div>
             <Footer />

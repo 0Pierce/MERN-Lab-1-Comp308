@@ -17,7 +17,7 @@ const UserSchema = new mongoose.Schema({
   favoriteProfessor: { type: String },
   gradeAverage: { type: Number, min: 0, max: 100 }, 
 
-  courses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
+  courses: [{ type: String }],
 });
 
 module.exports = mongoose.model("User", UserSchema, "users");
