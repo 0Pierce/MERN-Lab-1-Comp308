@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const Course = require("../models/Course");
-
+const bcrypt = require("bcryptjs");
 
 exports.getAllStudentsAdmin = async (req, res) => {
     try {
@@ -52,10 +52,12 @@ exports.addStudentAdmin = async (req, res) => {
             return res.status(400).json({ error: "Emailexists" });
         }
 
+        const hashedPassword = await bcrypt.hash("TempPass", 12);
+
         const newStudent = new User({
             username,
             email: email.trim().toLowerCase(),
-            password: "TempPass", 
+            password: hashedPassword,  // Store the hashed password
             userType: "Student", 
             studentNumber: `S${Date.now()}`,
             firstName,
