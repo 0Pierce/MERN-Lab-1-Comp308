@@ -35,7 +35,7 @@ exports.getStudentsInCourseAdmin = async (req, res) => {
     }
 };
 
-// ✅ Add a new student (Admin only)
+
 exports.addStudentAdmin = async (req, res) => {
     try {
         const {
@@ -57,7 +57,7 @@ exports.addStudentAdmin = async (req, res) => {
         const newStudent = new User({
             username,
             email: email.trim().toLowerCase(),
-            password: hashedPassword,  // Store the hashed password
+            password: hashedPassword, 
             userType: "Student", 
             studentNumber: `S${Date.now()}`,
             firstName,

@@ -13,7 +13,7 @@ export default function Homepage() {
     const fetchStudentData = async () => {
       try {
         const res = await axios.get('http://localhost:5000/auth/check_session', { withCredentials: true });
-        console.log('Session Response:', res.data); 
+        console.log('sesh Response:', res.data); 
 
         let decodedToken;
         try {
@@ -28,10 +28,10 @@ export default function Homepage() {
           setStudentName(decodedToken.username || 'Unknown Student');
           setUserType(decodedToken.userType || 'N/A');
         } else {
-          console.log('No active session or invalid token.');
+          console.log('No active sesh or invalid token.');
         }
       } catch (error) {
-        console.log('No active session or invalid token.');
+        console.log('No active sesh or invalid token.');
       }
     };
 
@@ -54,7 +54,7 @@ export default function Homepage() {
             <li>Announcement 1</li>
             <li>Announcement 2</li>
             <li>Announcement 3</li>
-            {/* Add more announcements as needed */}
+          
           </ul>
         </div>
 

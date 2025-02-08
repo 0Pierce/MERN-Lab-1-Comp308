@@ -18,7 +18,7 @@ export default function RegisterPage() {
   const [successMessage, setSuccessMessage] = useState("");
 
   const generateStudentNumber = () => {
-    return "S" + Math.floor(100000 + Math.random() * 900000); // Generates a 6-digit student number
+    return "S" + Math.floor(100000 + Math.random() * 900000); 
   };
 
   const handleSubmit = async (e) => {
@@ -68,7 +68,7 @@ export default function RegisterPage() {
         setErrorMessage(data.error || "An error occurred");
       }
     } catch (error) {
-      setErrorMessage("Server error. Please try again later.");
+      setErrorMessage("Server error");
     }
   };
 

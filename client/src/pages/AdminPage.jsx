@@ -27,7 +27,7 @@ export default function AdminPage() {
     fetchCourses();
   }, []);
 
-  // ✅ Fetch all students (Admin Only)
+  
   const fetchStudents = async () => {
     try {
       const response = await axios.get("http://localhost:5000/admin/students/all", { withCredentials: true });
@@ -35,16 +35,16 @@ export default function AdminPage() {
       if (response.data.students && Array.isArray(response.data.students)) {
         setStudents(response.data.students);
       } else {
-        console.error("❌ Unexpected response format:", response.data);
+        console.error("Unexpected response format:", response.data);
         setStudents([]);
       }
     } catch (error) {
-      console.error("❌ Error fetching students:", error.response?.data?.message || error.message);
+      console.error("Error fetching students:", error.response?.data?.message || error.message);
       setStudents([]);
     }
   };
 
-  // ✅ Fetch all courses (Admin Only)
+
   const fetchCourses = async () => {
     try {
       const response = await axios.get("http://localhost:5000/admin/courses/all", { withCredentials: true });
@@ -52,16 +52,16 @@ export default function AdminPage() {
       if (response.data.courses && Array.isArray(response.data.courses)) {
         setCourses(response.data.courses);
       } else {
-        console.error("❌ Unexpected response format:", response.data);
+        console.error("Unexpected response format:", response.data);
         setCourses([]);
       }
     } catch (error) {
-      console.error("❌ Error fetching courses:", error.response?.data?.message || error.message);
+      console.error("Error fetching courses:", error.response?.data?.message || error.message);
       setCourses([]);
     }
   };
 
-  // ✅ Fetch students for a specific course (Admin Only)
+  
   const fetchCourseStudents = async (courseCode) => {
     if (!courseCode) return;
     try {
@@ -70,23 +70,23 @@ export default function AdminPage() {
       if (response.data.students && Array.isArray(response.data.students)) {
         setCourseStudents(response.data.students);
       } else {
-        console.error("❌ Unexpected response format:", response.data);
+        console.error("Unexpected response format:", response.data);
         setCourseStudents([]);
       }
     } catch (error) {
-      console.error("❌ Error fetching course students:", error.response?.data?.message || error.message);
+      console.error("Error fetching course students:", error.response?.data?.message || error.message);
       setCourseStudents([]);
     }
   };
 
-  // ✅ Generate a unique student number
+ 
   const generateStudentNumber = () => `S${Date.now()}`;
 
-  // ✅ Add a new student (Admin Only)
+ 
   const handleAddStudent = async () => {
     const { username, email, firstName, lastName, address, city, phoneNumber, program } = newStudent;
     if (!username || !email || !firstName || !lastName || !address || !city || !phoneNumber || !program) {
-      alert("⚠ Please fill in all fields.");
+      alert("fill in all fields.");
       return;
     }
     try {
@@ -108,7 +108,7 @@ export default function AdminPage() {
         { withCredentials: true }
       );
 
-      alert("✅ Student added successfully!");
+      alert("Student added!");
       setNewStudent({
         username: "",
         email: "",
@@ -119,9 +119,9 @@ export default function AdminPage() {
         phoneNumber: "",
         program: "",
       });
-      fetchStudents(); // Refresh student list
+      fetchStudents();
     } catch (error) {
-      alert(error.response?.data?.message || "❌ Error adding student.");
+      alert(error.response?.data?.message || "Error adding student.");
     }
   };
 

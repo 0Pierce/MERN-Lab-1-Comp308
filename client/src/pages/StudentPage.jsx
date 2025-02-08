@@ -15,7 +15,7 @@ export default function StudentPage() {
         fetchCourses();
     }, []);
 
-    // Fetch Student Profile
+  
     const fetchStudentProfile = () => {
         fetch('http://localhost:5000/student/profile', {
             method: 'GET',
@@ -30,7 +30,7 @@ export default function StudentPage() {
         .catch((error) => console.error('Error fetching student profile:', error));
     };
 
-    // Fetch Courses from CoursesDB
+   
     const fetchCourses = () => {
         fetch('http://localhost:5000/course/courses', {
             method: 'GET',
@@ -42,14 +42,13 @@ export default function StudentPage() {
             if (Array.isArray(data) && data.length > 0) {
                 setCourses(data);
             } else {
-                console.error("Course data is missing or malformed:", data);
+                console.error("missing or malformed:", data);
                 setCourses([]);
             }
         })
         .catch((error) => console.error('Error fetching courses:', error));
     };
 
-    // Profile Handlers
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -65,13 +64,13 @@ export default function StudentPage() {
         if (response.ok) {
             const updatedData = await response.json();
             setStudent(updatedData);
-            alert('Profile updated successfully!');
+            alert('Profile updated');
         } else {
             alert('Failed to update profile');
         }
     };
 
-    // Course Handlers
+
     const handleAddCourse = async () => {
         if (courses.some(course => course.courseCode === newCourse.courseCode)) {
             alert('You have already added this course!');
@@ -86,7 +85,7 @@ export default function StudentPage() {
         });
 
         if (response.ok) {
-            alert('Course added successfully!');
+            alert('Course added');
             setNewCourse({ courseCode: '', courseName: '', section: '', semester: '' });
             fetchCourses();
         } else {
@@ -120,7 +119,7 @@ export default function StudentPage() {
         });
 
         if (response.ok) {
-            alert('Course dropped successfully!');
+            alert('Course dropped');
             fetchCourses();
         } else {
             alert('Failed to drop course');

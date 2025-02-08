@@ -6,7 +6,7 @@ const generateStudentNumber = () => {
   return "S" + Math.floor(100000 + Math.random() * 900000);
 };
 
-// Register a new user
+//Register 
 exports.register = async (req, res) => {
   try {
     const { username, email, password, userType, firstName, lastName, address, city, phoneNumber, program } = req.body;
@@ -17,12 +17,11 @@ exports.register = async (req, res) => {
 
     const existingUser = await User.findOne({ $or: [{ username }, { email }] });
     if (existingUser) {
-      return res.status(400).json({ error: "Username or email already in use" });
+      return res.status(400).json({ error: "Username or email taken" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create the user object
     const newUserData = {
       username,
       email,
@@ -30,7 +29,7 @@ exports.register = async (req, res) => {
       userType,
     };
 
-    // If the user is a Student, add student-specific fields
+    //Add fields if user is student
     if (userType === "Student") {
       newUserData.studentNumber = generateStudentNumber();
       newUserData.firstName = firstName;
@@ -41,7 +40,7 @@ exports.register = async (req, res) => {
       newUserData.program = program;
     }
 
-    // Save user to DB
+    //Save to db
     const newUser = await User.create(newUserData);
 
     res.status(201).json({ message: "User registered successfully. Please log in to continue." });
@@ -50,7 +49,7 @@ exports.register = async (req, res) => {
   }
 };
 
-// Login
+
 exports.login = async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -78,13 +77,13 @@ exports.login = async (req, res) => {
   }
 };
 
-// Logout
+
 exports.logout = (req, res) => {
   res.clearCookie("session", { httpOnly: true, secure: false, sameSite: "Lax" });
   res.json({ message: "Logout successful" });
 };
 
-// Check Session
+
 exports.checkSession = (req, res) => {
   const token = req.cookies.session;
   if (!token) return res.status(401).json({ message: "No active session" });

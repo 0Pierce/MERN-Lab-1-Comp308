@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { jwtDecode } from "jwt-decode"; // Corrected import
+import { jwtDecode } from "jwt-decode"; 
 import axios from "axios";
 import "/src/styles/Header.css";
 
@@ -12,12 +12,12 @@ export default function Header() {
     const fetchSession = async () => {
       try {
         const res = await axios.get("http://localhost:5000/auth/check_session", { withCredentials: true });
-        console.log("Session Response:", res.data); // Debugging
+        console.log("Session Response:", res.data); 
 
         let decodedToken;
         try {
-          decodedToken = jwtDecode(res.data.token); // Directly use jwtDecode
-          console.log("Decoded Token:", decodedToken); // Debugging
+          decodedToken = jwtDecode(res.data.token); 
+          console.log("Decoded Token:", decodedToken); 
         } catch (error) {
           console.error("JWT Decode Error:", error);
           return;

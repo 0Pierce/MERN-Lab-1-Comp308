@@ -1,15 +1,15 @@
 const mongoose = require("mongoose");
 const User = require("../models/User");
-const Course = require("../models/Course"); // ✅ Correct model import
+const Course = require("../models/Course"); 
 
-// ✅ Fetch all courses from the `Course` table
+
 exports.getCourses = async (req, res) => {
     try {
         if (!req.user) {
-            return res.status(401).json({ error: "Unauthorized: No user data in request" });
+            return res.status(401).json({ error: "No user data in request" });
         }
 
-        // Find the student and retrieve their course codes
+        
         const student = await User.findById(req.user.id);
         if (!student) return res.status(404).json({ error: "Student not found" });
 
@@ -40,21 +40,21 @@ exports.addCourse = async (req, res) => {
         const student = await User.findById(req.user.id);
         if (!student) return res.status(404).json({ error: "Student not found" });
 
-        // ✅ Prevent duplicate course entries
+       
         if (student.courses.includes(courseCode)) {
-            return res.status(400).json({ error: "Course already added" });
+            return res.status(400).json({ error: "Course already existsss" });
         }
 
-        // ✅ Check if the course already exists in the database
+       
         let existingCourse = await Course.findOne({ courseCode });
 
         if (!existingCourse) {
-            // ✅ Save course if it doesn’t exist
+           
             existingCourse = new Course({ courseCode, courseName, section, semester });
             await existingCourse.save();
         }
 
-        // ✅ Store `courseCode` instead of `_id`
+       
         student.courses.push(courseCode);
         await student.save();
 
@@ -65,16 +65,16 @@ exports.addCourse = async (req, res) => {
     }
 };
 
-// ✅ Update a course using `courseCode`
+
 exports.updateCourse = async (req, res) => {
     try {
         const { courseCode, section } = req.body;
 
         if (!courseCode || !section) {
-            return res.status(400).json({ error: "Both courseCode and section are required" });
+            return res.status(400).json({ error: "courseCode and section eeeeeee" });
         }
 
-        // ✅ Find the course by courseCode and update
+        
         const updatedCourse = await Course.findOneAndUpdate(
             { courseCode },
             { section },
@@ -92,13 +92,13 @@ exports.updateCourse = async (req, res) => {
     }
 };
 
-// ✅ Drop a course using `courseCode`
+
 exports.dropCourse = async (req, res) => {
     try {
         const { courseCode } = req.body;
 
         if (!req.user) {
-            return res.status(401).json({ error: "Unauthorized: No user data in request" });
+            return res.status(401).json({ error: "No user data in request" });
         }
 
         const student = await User.findById(req.user.id);
