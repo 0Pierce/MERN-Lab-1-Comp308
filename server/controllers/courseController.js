@@ -13,7 +13,7 @@ exports.getCourses = async (req, res) => {
         const student = await User.findById(req.user.id);
         if (!student) return res.status(404).json({ error: "Student not found" });
 
-        // ✅ Fetch full course details using courseCode from the `Course` table
+        
         const courses = await Course.find({ courseCode: { $in: student.courses } });
 
         console.log("Full course details being sent:", courses);
@@ -24,17 +24,17 @@ exports.getCourses = async (req, res) => {
     }
 };
 
-// ✅ Add a new course and link it to the student
+
 exports.addCourse = async (req, res) => {
     try {
         const { courseCode, courseName, section, semester } = req.body;
 
         if (!courseCode || !courseName || !section || !semester) {
-            return res.status(400).json({ error: "All fields (courseCode, courseName, section, semester) are required" });
+            return res.status(400).json({ error: "All fields are required" });
         }
 
         if (!req.user) {
-            return res.status(401).json({ error: "Unauthorized: No user data in request" });
+            return res.status(401).json({ error: "No user data in request" });
         }
 
         const student = await User.findById(req.user.id);
@@ -58,7 +58,7 @@ exports.addCourse = async (req, res) => {
         student.courses.push(courseCode);
         await student.save();
 
-        res.json({ message: "Course added successfully", course: existingCourse });
+        res.json({ message: "Course added", course: existingCourse });
     } catch (error) {
         console.error("Error adding course:", error);
         res.status(500).json({ error: "Server error" });
@@ -82,10 +82,10 @@ exports.updateCourse = async (req, res) => {
         );
 
         if (!updatedCourse) {
-            return res.status(404).json({ error: "Course not found with the given courseCode" });
+            return res.status(404).json({ error: "Course not found" });
         }
 
-        res.json({ message: "Course updated successfully", course: updatedCourse });
+        res.json({ message: "Course updated", course: updatedCourse });
     } catch (error) {
         console.error("Error updating course:", error);
         res.status(500).json({ error: "Server error" });
@@ -108,11 +108,11 @@ exports.dropCourse = async (req, res) => {
             return res.status(400).json({ error: "Course not found in student record" });
         }
 
-        // ✅ Remove courseCode from student's courses list
+      
         student.courses = student.courses.filter(code => code !== courseCode);
         await student.save();
 
-        res.json({ message: "Course dropped successfully" });
+        res.json({ message: "Course dropped" });
     } catch (error) {
         console.error("Error dropping course:", error);
         res.status(500).json({ error: "Server error" });

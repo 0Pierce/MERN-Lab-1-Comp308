@@ -13,12 +13,12 @@ export default function Homepage() {
     const fetchStudentData = async () => {
       try {
         const res = await axios.get('http://localhost:5000/auth/check_session', { withCredentials: true });
-        console.log('Session Response:', res.data); // Debugging
+        console.log('Session Response:', res.data); 
 
         let decodedToken;
         try {
-          decodedToken = jwtDecode(res.data.token); // Directly use jwtDecode
-          console.log('Decoded Token:', decodedToken); // Debugging
+          decodedToken = jwtDecode(res.data.token); 
+          console.log('Decoded Token:', decodedToken); 
         } catch (error) {
           console.error('JWT Decode Error:', error);
           return;
@@ -44,8 +44,8 @@ export default function Homepage() {
       <div className="homepageBody">
         <div className="profileSection">
           <img src="/src/assets/mathHelp.jpg" alt="Profile" className="profileImage" />
-          <h2>Welcome, {studentName}</h2>
-          <p>User Type: {userType}</p>
+          <h2>Welcome {studentName}</h2>
+          <p>{userType}</p>
         </div>
 
         <div className="announcementsSection">
